@@ -1,0 +1,124 @@
+<html>
+    <head>
+        <title>Le test - NIM buzz</title>
+        <style>
+            .logo{
+                height: 5%;
+            }
+
+            .title{
+                color: #ed7d31;
+                font-weight: bold;
+                font-style: italic;
+            }
+
+            .text{
+                color: #ed7d31;
+                font-size: large; 
+            }
+
+            #result_squares{
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            .square{
+                height: 100px;
+                width: 100px;
+                line-height: 100px;
+                text-align: center;
+                margin: 15; 
+            }
+
+            .nim {
+                background-color: #4caf50;
+            }
+
+            .buzz {
+                background-color: #607d8b;
+            }
+
+            .nim.buzz {
+                background-color: #ff9800;
+            }
+
+            .none {
+                background-color: #f44336;
+            }
+
+            .hidden {
+                display: none;
+            }
+
+            text, p, h2 {
+                margin-left: 15;
+                margin-right: 15; 
+            }
+
+            form{
+                padding: 20px
+            }
+        </style>
+    </head>
+    <body>
+        <h1>
+            <div class="title">
+                <a href="/"><img class="logo" src="https://www.netinfosmedias.com/media/images/icones/logo-netinfosmedias-seul-tampon.png"/></a>
+                Le test - NIM buzz
+            </div>
+        </h1>
+
+        <p class="text">
+            Choisisez une suite de nombre entre 1 et 1000
+        </p>
+
+        <div class="form">
+            <form method="post" action="/result.html">
+                <label>Nombre de début <input type="number" name="start"></label><br/>
+                <label>Nombre de fin <input type="number" name="end"></label><br/><br/>
+                <input type="submit" value="Tester la série"><br/>
+            </form>
+        </div>
+
+        <div id="result" class="hidden"> 
+            <h2>
+                Rappel des règles du NIM Buzz :
+            </h2>
+            <p>
+                On affiche une suite de nombre entre 1 et 1000, si divisible par 3, on affiche NIM, si divisible par 5 on affiche Buzz, NIM Buzz pour les 2
+                <br/>
+                Rappel des données transmises : départ = <span id="start"></span>, fin = <span id="end"></span>
+            </p>
+            <div id="result_squares">
+
+            </div>
+        </div>
+    </body>
+</html>
+<script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
+<script>
+    if (window.location.pathname == '/result.html'){
+        $.ajax({
+            url: 'http://127.0.0.1/getResult',
+            complete: function(data) {
+                json = data.responseJSON;
+
+                $.each(json, function(i, val){
+                    var txt, style;
+                    if (val.nim && val.buzz) { txt = 'NIM Buzz'; style = 'nim buzz'; }
+                    else if (!val.nim && !val.buzz) { txt = i; style = 'none'; }
+                    else if (val.nim) { txt = 'NIM'; style = "nim"; }
+                    else { txt = 'Buzz'; style = "buzz"; }
+
+                    var html = "<div class='square " + style + "'>" + txt + "</div>";
+                    $('#result_squares').append(html)
+                })
+
+                $('#start').text(Object.keys(json)[0]);
+                $('#end').text(Object.keys(json).length);
+
+                $('div').removeClass("hidden");
+            }
+        });
+    }
+</script>

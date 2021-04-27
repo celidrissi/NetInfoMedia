@@ -97,26 +97,36 @@
 </html>
 <script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
 <script>
+    // Si on est sur la page de résulat
     if (window.location.pathname == '/result.html'){
         $.ajax({
             url: 'http://127.0.0.1/getResult',
             complete: function(data) {
+                // Récupération du JSON
                 json = data.responseJSON;
 
+                // Création d'un carré pour chaque itérations
                 $.each(json, function(i, val){
-                    var txt, style;
-                    if (val.nim && val.buzz) { txt = 'NIM Buzz'; style = 'nim buzz'; }
-                    else if (!val.nim && !val.buzz) { txt = i; style = 'none'; }
-                    else if (val.nim) { txt = 'NIM'; style = "nim"; }
-                    else { txt = 'Buzz'; style = "buzz"; }
+                    var text, style;
 
-                    var html = "<div class='square " + style + "'>" + txt + "</div>";
+                    // Setup du texte
+                    if (val.nim && val.buzz) { text = 'NIM Buzz'; style = 'nim buzz'; }
+                    else if (!val.nim && !val.buzz) { text = i; style = 'none'; }
+                    else if (val.nim) { text = 'NIM'; style = "nim"; }
+                    else { text = 'Buzz'; style = "buzz"; }
+
+                    // Setup du innerHtml
+                    var html = "<div class='square " + style + "'>" + text + "</div>";
+
+                    // Ajout au DOM
                     $('#result_squares').append(html)
                 })
 
+                // Ajout des informations de début et fin
                 $('#start').text(Object.keys(json)[0]);
                 $('#end').text(Object.keys(json).length);
 
+                // Affichage des résultats
                 $('div').removeClass("hidden");
             }
         });

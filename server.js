@@ -4,9 +4,7 @@ var server = express();
 var hostname = '127.0.0.1';
 var port = 80;
 const fs = require('fs');
-require('console-stamp')(console, '[HH:MM:ss.l]'); // Heur pour log
-
-var json = {};
+require('console-stamp')(console, '[HH:MM:ss.l]'); // Heures/minutes pour log
 
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
